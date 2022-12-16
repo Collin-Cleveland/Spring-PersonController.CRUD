@@ -6,9 +6,10 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class PersonService {
-    @Autowired
-    PersonRepository personRepository;
     
+    @Autowired
+    private PersonRepository personRepository;
+
     public PersonService (PersonRepository personRepository) {
         this.personRepository = personRepository;
     }
@@ -21,12 +22,15 @@ public class PersonService {
         return personRepository.findOne(id);
     }
 
-    public List<Person> getPersonList() {
-        return (List<Person>) personRepository.findAll();
+    public Iterable<Person> getPersonList() {
+        return personRepository.findAll();
     }
 
-    public Person updatePerson(Person p) {
-        return personRepository.save(p);
+    public Person updatePerson(Integer id, Person nPersonData) {
+        Person originalPerson = personRepository.findOne(id);
+        originalPerson.setFirstName(nPersonData.getFirstName());
+        originalPerson.setLastName(nPersonData.getLastName());
+        return personRepository.save(originalPerson);
     }
 
     public Boolean deletePerson(int id) {
